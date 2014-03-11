@@ -1,0 +1,12 @@
+<NotepadPlus>
+    <Project name="basic_backbonejs">
+        <Folder name="js">
+            <File name="js\backbone-min.js" />
+            <File name="js\jquery.js" />
+            <File name="js\underscore.js" />
+            <File name="js\app.js" />
+        </Folder>
+        <File name="index.html" />
+        <File name="README.md" />
+    </Project>
+</NotepadPlus>
