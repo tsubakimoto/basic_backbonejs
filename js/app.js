@@ -6,6 +6,11 @@ var Task = Backbone.Model.extend({
         title: 'do something!',
         completed: false
     },
+    validate: function(attrs) { // バリデーション機能
+        if (_.isEmpty(attrs.title)) { // Underscore.jsの機能を使う
+            return 'title must not be empty!';
+        }
+    },
     toggle: function() { // メソッドも定義できる
         this.set('completed', !this.get('completed'));
     },
@@ -29,7 +34,8 @@ var task1 = new Task({
 // console.log(task1.toJSON());
 
 task1.log();
-task1.toggle();
+// task1.toggle();
+task1.set({title: ''}, {validate: true}); // オブジェクト形式の引数も使える
 task1.log();
 
 })();
