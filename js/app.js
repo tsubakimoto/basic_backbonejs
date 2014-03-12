@@ -15,9 +15,18 @@ var task = new Task();
 // Viewの定義
 var TaskView = Backbone.View.extend({
     tagName: 'li' // HTMLのタグ
+    // , className: 'liClass'
+    // , id: 'liId'
+    , template: _.template("<%- title %>")
+    , render: function() {
+        var template = this.template(this.model.toJSON());
+        this.$el.html(template);
+        return this; // renderでは常にthisを返す
+    }
 });
 var taskView = new TaskView({model: task});
-console.log(taskView.el); // .el : Viewを要素の形で取得する
+//console.log(taskView.el); // .el : Viewを要素の形で取得する
 //console.log(taskView.$el); // .$el : jQueryのオブジェクトとなる
+console.log(taskView.render().el);
 
 })();
