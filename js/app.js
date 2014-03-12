@@ -21,6 +21,12 @@ var TaskView = Backbone.View.extend({
         this.$el.html(template);
         return this; // renderでは常にthisを返す
     }
+    , events: { // イベントを定義
+        'click .command': 'sayHello' // 'トリガ (セレクタ)': 'メソッド名'
+    }
+    , sayHello: function() { // イベント関数
+        alert('hello!');
+    }
 });
 var taskView = new TaskView({model: task});
 console.log(taskView.render().el);
