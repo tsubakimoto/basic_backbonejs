@@ -21,15 +21,25 @@ var TaskView = Backbone.View.extend({
         this.$el.html(template);
         return this; // renderでは常にthisを返す
     }
-    , events: { // イベントを定義
-        'click .command': 'sayHello' // 'トリガ (セレクタ)': 'メソッド名'
-    }
-    , sayHello: function() { // イベント関数
-        alert('hello!');
-    }
 });
-var taskView = new TaskView({model: task});
-console.log(taskView.render().el);
-$('body').append(taskView.render().el);
+
+// Collectionの定義
+var Tasks = Backbone.Collection.extend({
+    model: Task
+});
+var tasks = new Tasks([
+    // 各Taskのデータを設定
+    {
+        title: 'task1'
+        , completed: true
+    },
+    {
+        title: 'task2'
+    },
+    {
+        title: 'task3'
+    }
+]);
+console.log(tasks.toJSON());
 
 })();
