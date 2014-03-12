@@ -27,6 +27,18 @@ var TaskView = Backbone.View.extend({
 var Tasks = Backbone.Collection.extend({
     model: Task
 });
+// Collection用のViewの定義
+var TasksView = Backbone.View.extend({
+    tagName: 'ul' // 各Viewを包含するタグにする
+    , render: function() {
+        this.collection.each(function(task) {
+            var taskView = new TaskView({model: task});
+            this.$el.append(taskView.render().el); // this=<ul>
+        }, this); // コンテクスト
+        return this;
+    }
+});
+
 var tasks = new Tasks([
     // 各Taskのデータを設定
     {
@@ -40,6 +52,7 @@ var tasks = new Tasks([
         title: 'task3'
     }
 ]);
-console.log(tasks.toJSON());
+var tasksView = new TasksView({collection: tasks});
+$('#tasks').html(tasksView.render().el);
 
 })();
