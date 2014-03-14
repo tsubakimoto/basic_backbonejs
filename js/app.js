@@ -13,8 +13,10 @@ var Tasks = Backbone.Collection.extend({ model: Task });
 
 var TaskView = Backbone.View.extend({
     tagName: 'li',
-    initialize: function() {
+    initialize: function() { // 初期化時処理
+        // object.on(events, callback, [context])
         this.model.on('destroy', this.remove, this);
+        this.model.on('change', this.render, this);
     },
     template: _.template($('#task-template').html()),
     render: function() {
@@ -23,7 +25,11 @@ var TaskView = Backbone.View.extend({
         return this;
     },
     events: {
-        'click .delete': 'destroy'
+        'click .delete': 'destroy', // 削除イベント
+        'click .toggle': 'toggle'
+    },
+    toggle: function() {
+        this.model.set('completed', !this.model.get('completed'));
     },
     destroy: function() {
         if (confirm('are you sure?')) {
