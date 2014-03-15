@@ -14,7 +14,7 @@ var Task = Backbone.Model.extend({
     initialize: function() {
         // invalid : バリデーション失敗時イベント
         this.on('invalid', function(model, error) {
-            $('#error').html(error);
+            $('#error').html(error); // エラーメッセージ表示
         });
     },
     log: function() {
@@ -37,8 +37,8 @@ var TaskView = Backbone.View.extend({
         return this;
     },
     events: {
-        'click .delete': 'destroy', // 削除イベント
-        'click .toggle': 'toggle'
+        'click .delete': 'destroy', // 削除時イベント
+        'click .toggle': 'toggle'   // チェック時イベント
     },
     toggle: function() {
         this.model.set('completed', !this.model.get('completed'));
@@ -57,13 +57,21 @@ var TaskView = Backbone.View.extend({
 var TasksView = Backbone.View.extend({
     tagName: 'ul',
     initialize: function() {
+        // タスク追加時イベント → タスク追加処理
         this.collection.on('add', this.addNew, this);
+        // タスク更新時イベント → 未完タスク数更新処理
+        this.collection.on('change', this.updateCount, this);
+        // タスク削除時イベント → 未完タスク数更新処理
+        this.collection.on('destroy', this.updateCount, this);
     },
     addNew: function(task) {
         var taskView = new TaskView({ model: task });
         this.$el.append(taskView.render().el);
+        $('#title').val('').focus();
+        this.updateCount();
     },
     updateCount: function() {
+        // 未完タスク数を更新
         var uncompletedTasks = this.collection.filter(function(task) {
             return !task.get('completed');
         });
@@ -74,7 +82,7 @@ var TasksView = Backbone.View.extend({
             var taskView = new TaskView({ model: task });
             this.$el.append(taskView.render().el);
         }, this);
-        this.updateCount();
+        this.updateCount(); // 未完タスク数を更新
         return this;
     }
 });
@@ -91,6 +99,7 @@ var AddTaskView = Backbone.View.extend({
         if (task.set({ title: $('#title').val() }, { validate: true })) {
             // バリデーションが問題なければコレクションに追加
             this.collection.add(task);
+            $('#error').empty();
         }
     }
 });
