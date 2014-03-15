@@ -7,10 +7,12 @@ var Task = Backbone.Model.extend({
     },
     validate: function(attrs) {
         if (_.isEmpty(attrs.title)) {
+            // titleが空白ならエラー
             return 'title must not be empty';
         }
     },
     initialize: function() {
+        // invalid : バリデーション失敗時イベント
         this.on('invalid', function(model, error) {
             $('#error').html(error);
         });
@@ -61,11 +63,18 @@ var TasksView = Backbone.View.extend({
         var taskView = new TaskView({ model: task });
         this.$el.append(taskView.render().el);
     },
+    updateCount: function() {
+        var uncompletedTasks = this.collection.filter(function(task) {
+            return !task.get('completed');
+        });
+        $('#count').html(uncompletedTasks.length);
+    },
     render: function() {
         this.collection.each(function(task) {
             var taskView = new TaskView({ model: task });
             this.$el.append(taskView.render().el);
         }, this);
+        this.updateCount();
         return this;
     }
 });
@@ -76,10 +85,11 @@ var AddTaskView = Backbone.View.extend({
         'submit': 'submit'
     },
     submit: function(e) {
-        e.preventDefault();
+        e.preventDefault(); // formのsubmitイベントを中止
         // var task = new Task({ title: $('#title').val() });
         var task = new Task();
         if (task.set({ title: $('#title').val() }, { validate: true })) {
+            // バリデーションが問題なければコレクションに追加
             this.collection.add(task);
         }
     }
